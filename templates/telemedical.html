@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TeleMedical Portal</title>
+  <link rel="stylesheet" type="text/css" href="../static/tele.css">
+
+</head>
+<body>
+  <header>
+    <h1>TeleMedical Portal</h1>
+    <p>Access healthcare from the comfort of your home</p>
+  </header>
+
+  <nav>
+    <a href="#book">Book Appointment</a>
+    <a href="#consult">Consult Doctor</a>
+    <a href="#records">Medical Records</a>
+  </nav>
+
+  <div class="container">
+    <div class="section" id="book">
+      <h2>Book Appointment</h2>
+      <div class="form-group">
+        <label for="name">Name:</label>
+        <input type="text" id="name">
+      </div>
+      <div class="form-group">
+        <label for="date">Date:</label>
+        <input type="date" id="date">
+      </div>
+      <button onclick="bookAppointment()">Submit</button>
+    </div>
+
+    <div class="section" id="consult">
+      <h2>Consult a Doctor</h2>
+      <p>Video consultation link will appear here at your appointment time.</p>
+    </div>
+
+    <div class="section" id="records">
+      <h2>Medical Records</h2>
+      <p>Login to view or upload your medical records.</p>
+    </div>
+  </div>
+
+  <script>
+    function bookAppointment() {
+      const name = document.getElementById('name').value;
+      const date = document.getElementById('date').value;
+      if (name && date) {
+        alert(`Appointment booked for ${name} on ${date}`);
+      } else {
+        alert("Please fill in all fields.");
+      }
+    }
+  </script>
+</body>
+</html>
