@@ -1,97 +1,135 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Telemedical</title>
-  <link rel="stylesheet" type="text/css" href="../static/landin.css">
-</head>
-<body>
-<div class="landing-container">
-    <h1>Welcome to TeleMedical</h1>
-    <p>Access your healthcare portal anytime, anywhere</p>
-    <button class="btn" onclick="showModal('signupModal')">Sign Up</button>
-    <button class="btn" onclick="showModal('loginModal')">Login</button>
-  </div>
-
-  <!-- Sign Up Modal -->
-  <div id="signupModal" class="modal">
-    <div class="modal-content">
-      <span class="close" onclick="closeModal('signupModal')">&times;</span>
-      <h2>Sign Up</h2>
-      <div class="form-group">
-        <label for="signupName">Name:</label>
-        <input type="text" id="signupName" required>
-      </div>
-      <div class="form-group">
-        <label for="signupEmail">Email:</label>
-        <input type="email" id="signupEmail" required>
-      </div>
-      <div class="form-group">
-        <label for="signupPassword">Password:</label>
-        <input type="password" id="signupPassword" required>
-      </div>
-      <button class="submit-btn" onclick="submitSignup()">Create Account</button>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Telemedical</title>
+    <link rel="stylesheet" type="text/css" href="../static/landin.css" />
+  </head>
+  <body>
+    <div class="landing-container">
+      <h1>Welcome to TeleMedical</h1>
+      <p>Access your healthcare portal anytime, anywhere</p>
+      <button class="btn" onclick="showModal('signupModal')">Sign Up</button>
+      <button class="btn" onclick="showModal('loginModal')">Login</button>
     </div>
-  </div>
 
-  <!-- Login Modal -->
-  <div id="loginModal" class="modal">
-    <div class="modal-content">
-      <span class="close" onclick="closeModal('loginModal')">&times;</span>
-      <h2>Login</h2>
-      <div class="form-group">
-        <label for="loginEmail">Email:</label>
-        <input type="email" id="loginEmail" required>
+    <!-- Sign Up Modal -->
+    <div id="signupModal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal('signupModal')">&times;</span>
+        <h2>Sign Up</h2>
+        <div class="form-group">
+          <label for="signupName">Name:</label>
+          <input type="text" id="signupName" required />
+        </div>
+        <div class="form-group">
+          <label for="signupEmail">Email:</label>
+          <input type="email" id="signupEmail" required />
+        </div>
+        <div class="form-group">
+          <label for="signupPassword">Password:</label>
+          <input type="password" id="signupPassword" required />
+        </div>
+        <button class="submit-btn" onclick="submitSignup()">
+          Create Account
+        </button>
       </div>
-      <div class="form-group">
-        <label for="loginPassword">Password:</label>
-        <input type="password" id="loginPassword" required>
-      </div>
-      <button class="submit-btn" onclick="submitLogin()">Login</button>
     </div>
-  </div>
 
-  <script>
-    function showModal(id) {
-      document.getElementById(id).style.display = 'block';
-    }
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal('loginModal')">&times;</span>
+        <h2>Login</h2>
+        <div class="form-group">
+          <label for="loginEmail">Email:</label>
+          <input type="email" id="loginEmail" required />
+        </div>
+        <div class="form-group">
+          <label for="loginPassword">Password:</label>
+          <input type="password" id="loginPassword" required />
+        </div>
+        <button class="submit-btn" onclick="submitLogin()">Login</button>
+      </div>
+    </div>
 
-    function closeModal(id) {
-      document.getElementById(id).style.display = 'none';
-    }
-
-    function submitSignup() {
-      const name = document.getElementById('signupName').value;
-      const email = document.getElementById('signupEmail').value;
-      const password = document.getElementById('signupPassword').value;
-
-      if (name && email && password) {
-        alert(`Welcome, ${name}! Redirecting to your portal...`);
-        window.location.href = 'telemedical.html';
-      } else {
-        alert('Please fill in all fields.');
+    <script>
+      function showModal(id) {
+        document.getElementById(id).style.display = "block";
       }
-    }
 
-    function submitLogin() {
-      const email = document.getElementById('loginEmail').value;
-      const password = document.getElementById('loginPassword').value;
-
-      if (email && password) {
-        alert('Login successful! Redirecting...');
-        window.location.href = 'telemedical.html';
-      } else {
-        alert('Please enter email and password.');
+      function closeModal(id) {
+        document.getElementById(id).style.display = "none";
       }
-    }
 
-    // Close modal when clicking outside
-    window.onclick = function(event) {
-      if (event.target.classList.contains('modal')) {
-        event.target.style.display = "none";
+      function submitSignup() {
+        const username = document.getElementById("signupName").value;
+        const email = document.getElementById("signupEmail").value;
+        const password = document.getElementById("signupPassword").value;
+
+        if (username && email && password) {
+          fetch("http://127.0.0.1:8888/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, email, password }),
+          })
+            .then((res) => res.json())
+            .then((data) => {
+              if (data.msg === "User registered successfully!") {
+                alert(`Welcome, ${username}! Please login now.`);
+                closeModal("signupModal");
+              } else {
+                alert(data.msg || "Registration failed");
+              }
+            })
+            .catch((err) => alert("Error: " + err.message));
+        } else {
+          alert("Please fill in all fields.");
+        }
       }
-    }
-  </script>
-</body>
+
+      function submitLogin() {
+        const email = document.getElementById("loginEmail").value;
+        const password = document.getElementById("loginPassword").value;
+
+        if (email && password) {
+          fetch("http://127.0.0.1:8888/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password }),
+          })
+            .then((res) => {
+              if (!res.ok)
+                throw new Error("Invalid credentials or banned user");
+              return res.json();
+            })
+            .then((data) => {
+              // Save JWT token in localStorage/sessionStorage
+              localStorage.setItem("access_token", data.access_token);
+              localStorage.setItem("role", data.role);
+
+              alert("Login successful! Redirecting...");
+
+              // Redirect depending on role
+              if (data.role === "admin") {
+                window.location.href = "admin.html"; // create this page for admin dashboard
+              } else {
+                window.location.href = "telemedical.html";
+              }
+            })
+            .catch((err) => alert("Login failed: " + err.message));
+        } else {
+          alert("Please enter email and password.");
+        }
+      }
+
+      // Close modal when clicking outside
+      window.onclick = function (event) {
+        if (event.target.classList.contains("modal")) {
+          event.target.style.display = "none";
+        }
+      };
+    </script>
+  </body>
 </html>

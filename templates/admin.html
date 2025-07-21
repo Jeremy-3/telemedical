@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Dashboard</title>
+</head>
+<body>
+  <h1>Admin - User Management</h1>
+  <table id="usersTable" border="1">
+    <thead>
+      <tr><th>ID</th><th>Username</th><th>Email</th><th>Role</th><th>Banned</th></tr>
+    </thead>
+    <tbody>
+      <!-- user rows here -->
+    </tbody>
+  </table>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const token = localStorage.getItem('access_token');
+      if (!token) {
+        alert('Not logged in');
+        window.location.href = 'index.html';
+        return;
+      }
+
+      fetch('http://127.0.0.1:8888/users', {
+        headers: { 'Authorization': 'Bearer ' + token }
+      })
+      .then(res => res.json())
+      .then(users => {
+        const tbody = document.getElementById('usersTable').querySelector('tbody');
+        users.forEach(user => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${user.id}</td>
+            <td>${user.username}</td>
+            <td>${user.email}</td>
+            <td>${user.role}</td>
+            <td>${user.is_banned ? 'Yes' : 'No'}</td>
+          `;
+          tbody.appendChild(row);
+        });
+      });
+    });
+  </script>
+</body>
+</html>
